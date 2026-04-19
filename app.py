@@ -5,9 +5,7 @@ import json
 import base64
 from datetime import datetime
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  DATABASE
-# ══════════════════════════════════════════════════════════════════════════════
+
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nailpro_users.db")
 
 def get_db():
@@ -108,9 +106,7 @@ def save_current_user():
         db_save_user(st.session_state.current_user,
                      st.session_state.users[st.session_state.current_user])
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  PAGE CONFIG
-# ══════════════════════════════════════════════════════════════════════════════
+
 st.set_page_config(
     page_title="NailPro Academy",
     page_icon="💅",
@@ -118,9 +114,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  GLOBAL CSS
-# ══════════════════════════════════════════════════════════════════════════════
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap');
@@ -281,9 +275,7 @@ section[data-testid="stSidebar"],
 
 st.markdown('<div id="top"></div>', unsafe_allow_html=True)
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  SESSION STATE
-# ══════════════════════════════════════════════════════════════════════════════
+
 for k, v in {
     "page": "Prezentare", "logged_in": False,
     "users": {}, "current_user": None,
@@ -292,9 +284,7 @@ for k, v in {
     if k not in st.session_state:
         st.session_state[k] = v
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  IMAGE PATHS
-# ══════════════════════════════════════════════════════════════════════════════
+
 BASE1 = r"C:\Users\Melisa\Desktop\Pagina web\Nivel 1"
 BASE2 = r"C:\Users\Melisa\Desktop\Pagina web\Nivel 2"
 N1 = [os.path.join(BASE1, f"{i}.jpeg") for i in range(1, 11)]
@@ -309,9 +299,8 @@ def _img_to_b64(path):
     except Exception:
         return ""
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  HELPERS
-# ══════════════════════════════════════════════════════════════════════════════
+
+
 def carousel(images, key, idx_key):
     imgs = valid(images)
     if not imgs:
@@ -368,9 +357,7 @@ def rule():
 def sp(n=1):
     st.markdown(f"<div style='margin:{n*0.5}rem 0;'></div>", unsafe_allow_html=True)
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  SIDEBAR
-# ══════════════════════════════════════════════════════════════════════════════
+
 with st.sidebar:
     st.markdown("""
     <div class="sl">
@@ -426,9 +413,7 @@ with st.sidebar:
             st.session_state.cart = []
             st.session_state.page = "Prezentare"; st.rerun()
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ PREZENTARE
-# ══════════════════════════════════════════════════════════════════════════════
+
 if st.session_state.page == "Prezentare":
     sp(2)
     st.markdown('<span class="eyebrow">Cursuri online de manichiura</span>', unsafe_allow_html=True)
@@ -565,9 +550,7 @@ if st.session_state.page == "Prezentare":
                 st.session_state.page = "Recenzii"; scroll_top(); st.rerun()
     rule()
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ PACHETE
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Pachete":
     scroll_top()
     sp(2)
@@ -678,9 +661,7 @@ elif st.session_state.page == "Pachete":
             </div>""", unsafe_allow_html=True)
     sp(2)
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ CONTACT
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Contact":
     sp(2)
     st.markdown('<span class="eyebrow">Suntem aici pentru tine</span>', unsafe_allow_html=True)
@@ -720,9 +701,7 @@ elif st.session_state.page == "Contact":
           allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
         </iframe>""", height=510)
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ AUTH
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Auth":
     sp(2)
     st.markdown('<span class="eyebrow">Acceseaza platforma</span>', unsafe_allow_html=True)
@@ -773,9 +752,7 @@ elif st.session_state.page == "Auth":
                         else:
                             st.error("Eroare la crearea contului.")
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ PROFILUL MEU
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Profilul Meu":
     if not st.session_state.logged_in:
         st.warning("Autentifica-te mai intai.")
@@ -860,9 +837,7 @@ elif st.session_state.page == "Profilul Meu":
                 st.markdown("<p style='font-size:0.78rem;color:var(--muted);'>Niciun curs inca.</p>", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ CURSURILE MELE
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Cursurile Mele":
     if not st.session_state.logged_in:
         st.warning("Autentifica-te mai intai.")
@@ -917,9 +892,7 @@ elif st.session_state.page == "Cursurile Mele":
                                 if st.button("✕ Anuleaza", key=f"cancel_{o['name']}"):
                                     st.session_state[act_key] = False; st.rerun()
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ COS
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Cos":
     if not st.session_state.logged_in:
         st.warning("Autentifica-te mai intai.")
@@ -1016,9 +989,7 @@ elif st.session_state.page == "Cos":
                         st.success("Comanda a fost inregistrata cu succes!")
                         st.info(f"Detaliile de plata vor fi trimise la **{cem}** in termen de 24 ore de la confirmarea platii.")
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ RECENZII
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Recenzii":
     sp(2)
     st.markdown('<span class="eyebrow">Experientele cursantelor noastre</span>', unsafe_allow_html=True)
@@ -1101,9 +1072,7 @@ elif st.session_state.page == "Recenzii":
                             db_add_review(st.session_state.current_user, rev_name, rev_curs, rev_rat, rev_text)
                             st.success("Recenzia ta a fost publicata! Multumim 💛"); st.rerun()
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  ▌ BLOG
-# ══════════════════════════════════════════════════════════════════════════════
+
 elif st.session_state.page == "Blog":
     sp(2)
     st.markdown('<span class="eyebrow">Sfaturi & inspiratie</span>', unsafe_allow_html=True)
@@ -1149,9 +1118,7 @@ elif st.session_state.page == "Blog":
                 if nl_email and "@" in nl_email: st.success("Te-ai abonat cu succes! Vei primi cele mai noi articole si oferte.")
                 else: st.error("Introdu o adresa de email valida.")
 
-# ══════════════════════════════════════════════════════════════════════════════
-#  FOOTER
-# ══════════════════════════════════════════════════════════════════════════════
+
 sp(3)
 
 if not st.session_state.sat_done:
