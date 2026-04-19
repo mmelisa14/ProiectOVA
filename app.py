@@ -495,7 +495,9 @@ def carousel(images, key, idx_key):
     """, unsafe_allow_html=True)
     st.markdown("""
     <style>
-    
+    [data-testid="collapsedControl"] svg {
+    display: none !important;
+}
     </style>
     """, unsafe_allow_html=True)
 
