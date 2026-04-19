@@ -5,7 +5,12 @@ import sqlite3
 import json
 from datetime import datetime
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  PAGE CONFIG
+# ══════════════════════════════════════════════════════════════════════════════
+# ══════════════════════════════════════════════════════════════════════════════
+#  DATABASE — SQLite persistent storage
+# ══════════════════════════════════════════════════════════════════════════════
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nailpro_users.db")
 
 def get_db():
@@ -102,7 +107,7 @@ def db_user_exists(email):
     conn.close()
     return row is not None
 
-
+# ── Sync DB → session state ────────────────────────────────────────────────────
 def load_user_to_session(email):
     user = db_get_user(email)
     if user:
@@ -120,7 +125,9 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  GLOBAL CSS — Black × Gold × Rose palette, Luxury editorial
+# ══════════════════════════════════════════════════════════════════════════════
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap');
@@ -383,10 +390,46 @@ div[data-testid="column"] .stButton > button:has(+ *) {
 </style>
 """, unsafe_allow_html=True)
 
-
+# ── Scroll-to-top anchor injected once ────────────────────────────────────────
 st.markdown('<div id="top"></div>', unsafe_allow_html=True)
 
+# ── Always-visible sidebar toggle button ──────────────────────────────────────
+st.markdown("""
+<style>
+/* Force Streamlit's native collapse button to always show */
+[data-testid="collapsedControl"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    top: 1rem !important;
+    left: 1rem !important;
+    z-index: 9999 !important;
+    background: #EDE3D5 !important;
+    border: 1px solid #C8B89A !important;
+    border-radius: 50% !important;
+    width: 2.2rem !important;
+    height: 2.2rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
+}
+[data-testid="collapsedControl"]:hover {
+    background: #D6C8B4 !important;
+    box-shadow: 0 3px 12px rgba(139,94,26,0.2) !important;
+}
+[data-testid="collapsedControl"] svg {
+    fill: #8B5E1A !important;
+    width: 1rem !important;
+    height: 1rem !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  SESSION STATE
+# ══════════════════════════════════════════════════════════════════════════════
 for k, v in {
     "page": "Prezentare", "logged_in": False,
     "users": {}, "current_user": None,
@@ -395,7 +438,9 @@ for k, v in {
     if k not in st.session_state:
         st.session_state[k] = v
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  IMAGE PATHS
+# ══════════════════════════════════════════════════════════════════════════════
 BASE1 = r"C:\Users\Melisa\Desktop\Pagina web\Nivel 1"
 BASE2 = r"C:\Users\Melisa\Desktop\Pagina web\Nivel 2"
 N1 = [os.path.join(BASE1, f"{i}.jpeg") for i in range(1, 11)]
@@ -403,7 +448,9 @@ N2 = [os.path.join(BASE2, f"{i}.jpeg") for i in range(29, 20, -1)]
 
 def valid(paths): return [p for p in paths if os.path.exists(p)]
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  HELPERS
+# ══════════════════════════════════════════════════════════════════════════════
 def carousel(images, key, idx_key):
     imgs = valid(images)
     if not imgs:
@@ -417,7 +464,7 @@ def carousel(images, key, idx_key):
         return
     idx = st.session_state[idx_key] % len(imgs)
 
-
+    # ── Auto-advance: trigger rerun every 10s via JS counter ──────────────────
     auto_key = f"{key}_auto_tick"
     if auto_key not in st.session_state:
         st.session_state[auto_key] = 0
@@ -469,50 +516,6 @@ def carousel(images, key, idx_key):
     }})();
     </script>
     """, unsafe_allow_html=True)
-    st.markdown("""
-    <style>
-    [data-testid="collapsedControl"] {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: fixed !important;
-        top: 1rem !important;
-        left: 1rem !important;
-        z-index: 9999 !important;
-        background: #EDE3D5 !important;
-        border: 1px solid #C8B89A !important;
-        border-radius: 50% !important;
-        width: 2.2rem !important;
-        height: 2.2rem !important;
-        align-items: center !important;
-        justify-content: center !important;
-        cursor: pointer !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.12) !important;
-    }
-    [data-testid="collapsedControl"]:hover {
-        background: #D6C8B4 !important;
-        box-shadow: 0 3px 12px rgba(139,94,26,0.2) !important;
-    }
-    [data-testid="collapsedControl"] svg {
-        fill: #8B5E1A !important;
-        width: 1rem !important;
-        height: 1rem !important;
-    }
-
-}
-
-/* backup selector pentru versiuni Streamlit diferite */
-[data-testid="stSidebarCollapseButton"] {
-    display: none !important;
-}
-
-/* încă un fallback universal */
-section[data-testid="stSidebar"] > div:first-child button {
-    display: none !important;
-}
-}
-    </style>
-    """, unsafe_allow_html=True)
 
 def gallery(images, n=4):
     imgs = valid(images)[:n]
@@ -550,7 +553,9 @@ def rule():
 def sp(n=1):
     st.markdown(f"<div style='margin:{n*0.5}rem 0;'></div>", unsafe_allow_html=True)
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  SIDEBAR
+# ══════════════════════════════════════════════════════════════════════════════
 with st.sidebar:
     st.markdown("""
     <div class="sl">
@@ -613,7 +618,9 @@ with st.sidebar:
             st.session_state.cart = []
             st.session_state.page = "Prezentare"; st.rerun()
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ PREZENTARE
+# ══════════════════════════════════════════════════════════════════════════════
 if st.session_state.page == "Prezentare":
 
     # Hero
@@ -640,7 +647,7 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+    # Galerie Nivel 2 decorativă (5 imagini uniforme)
     sp()
     st.markdown('<span class="eyebrow">Lucrări din cursurile noastre</span>', unsafe_allow_html=True)
     sp()
@@ -649,7 +656,7 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+    # About + features
     a_left, a_gap, a_right = st.columns([5, 1, 4])
 
     with a_left:
@@ -685,7 +692,7 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+    # How it works
     st.markdown('<span class="eyebrow">Procesul nostru</span>', unsafe_allow_html=True)
     sp()
     st.markdown('<div class="sec-title" style="text-align:center;">Cum <em>funcționează</em></div>', unsafe_allow_html=True)
@@ -709,7 +716,7 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+    # CTA
     _, mc, _ = st.columns([3,2,3])
     with mc:
         st.markdown('<div class="btn-fill">', unsafe_allow_html=True)
@@ -721,7 +728,7 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+    # ── SOCIAL MEDIA LINKS ───────────────────────────────────────────────────
     st.markdown('<span class="eyebrow">Urmărește-ne</span>', unsafe_allow_html=True)
     sp()
     soc_l, soc_r = st.columns(2)
@@ -754,7 +761,7 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+    # ── RECENZII PREVIEW ─────────────────────────────────────────────────────
     reviews = db_get_reviews()
     if reviews:
         st.markdown('<span class="eyebrow">Ce spun cursantele noastre</span>', unsafe_allow_html=True)
@@ -782,7 +789,9 @@ if st.session_state.page == "Prezentare":
 
     rule()
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ PACHETE
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Pachete":
     scroll_top()
     sp(2)
@@ -919,7 +928,7 @@ elif st.session_state.page == "Pachete":
 
     rule()
 
-
+    # ── DEMO VIDEOS SECTION ──────────────────────────────────────────────────
     st.markdown('<span class="eyebrow">Previzualizare conținut</span>', unsafe_allow_html=True)
     sp()
     st.markdown('<div class="sec-title" style="text-align:center;">Demo <em>video</em> — Tehnici din cursuri</div>', unsafe_allow_html=True)
@@ -929,7 +938,7 @@ elif st.session_state.page == "Pachete":
     vd1, vd2, vd3 = st.columns(3)
     videos = [
         ("https://www.youtube.com/shorts/rXKiPWxtof4", "Tehnici de bază", "Nivel 1 · Construcție unghii"),
-        ("https://www.youtube.com/shorts/L43uKZgP9QI", "Modelare avansată", "Nivel 2 · Forme speciale"),
+        ("https://www.youtube.com/shorts/ixEotix6bg0", "Modelare avansată", "Nivel 2 · Forme speciale"),
         ("https://www.youtube.com/shorts/Do8woKfEuv0", "Finisare profesională", "Nivel 1 & 2 · Detalii"),
     ]
     for col, (url, title, sub) in zip([vd1, vd2, vd3], videos):
@@ -953,7 +962,9 @@ elif st.session_state.page == "Pachete":
             </div>""", unsafe_allow_html=True)
     sp(2)
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ CONTACT
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Contact":
     sp(2)
     st.markdown('<span class="eyebrow">Suntem aici pentru tine</span>', unsafe_allow_html=True)
@@ -1005,6 +1016,9 @@ elif st.session_state.page == "Contact":
           allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
         </iframe>""", height=510)
 
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ AUTH
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Auth":
     sp(2)
     st.markdown('<span class="eyebrow">Accesează platforma</span>', unsafe_allow_html=True)
@@ -1058,7 +1072,9 @@ elif st.session_state.page == "Auth":
                         else:
                             st.error("Eroare la crearea contului.")
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ PROFILUL MEU
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Profilul Meu":
     if not st.session_state.logged_in:
         st.warning("Autentifică-te mai întâi.")
@@ -1070,7 +1086,7 @@ elif st.session_state.page == "Profilul Meu":
         st.markdown('<span class="pg-title">Profilul <span class="g">meu</span></span>', unsafe_allow_html=True)
         rule()
 
-
+        # ── DEMO VIDEOS ──────────────────────────────────────────────────────
         st.markdown('<div class="sec-title" style="margin-bottom:0.5rem;">Video <em>demo</em> — Previzualizare cursuri</div>', unsafe_allow_html=True)
         st.markdown('<p style="font-size:0.78rem;color:var(--muted);margin-bottom:1.2rem;">Trei tehnici din cursurile NailPro Academy</p>', unsafe_allow_html=True)
         pv1, pv2, pv3 = st.columns(3)
@@ -1147,7 +1163,9 @@ elif st.session_state.page == "Profilul Meu":
                 st.markdown("<p style='font-size:0.78rem;color:var(--muted);'>Niciun curs încă.</p>", unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ CURSURILE MELE
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Cursurile Mele":
     if not st.session_state.logged_in:
         st.warning("Autentifică-te mai întâi.")
@@ -1207,7 +1225,9 @@ elif st.session_state.page == "Cursurile Mele":
                                     st.session_state[act_key] = False
                                     st.rerun()
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ COȘ
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Coș":
     if not st.session_state.logged_in:
         st.warning("Autentifică-te mai întâi.")
@@ -1323,7 +1343,9 @@ elif st.session_state.page == "Coș":
                         st.success("Comanda a fost înregistrată cu succes!")
                         st.info(f"Detaliile de plată și link-ul de acces la cursuri vor fi trimise la **{cem}** în termen de 24 ore de la confirmarea plății.")
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ RECENZII
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Recenzii":
     sp(2)
     st.markdown('<span class="eyebrow">Experiențele cursantelor noastre</span>', unsafe_allow_html=True)
@@ -1333,7 +1355,7 @@ elif st.session_state.page == "Recenzii":
 
     reviews = db_get_reviews()
 
-
+    # ── Rating summary ────────────────────────────────────────────────────────
     if reviews:
         avg = sum(r["rating"] for r in reviews) / len(reviews)
         rc1, rc2, rc3 = st.columns([2,1,2])
@@ -1351,7 +1373,7 @@ elif st.session_state.page == "Recenzii":
 
     sp(2)
 
-
+    # ── All reviews grid ──────────────────────────────────────────────────────
     for i in range(0, len(reviews), 2):
         cols = st.columns(2)
         for j, col in enumerate(cols):
@@ -1378,7 +1400,7 @@ elif st.session_state.page == "Recenzii":
 
     rule()
 
-
+    # ── Add review form ───────────────────────────────────────────────────────
     if not st.session_state.logged_in:
         st.markdown("""
         <div class="card" style="text-align:center;padding:2rem;border-radius:10px;">
@@ -1436,7 +1458,9 @@ elif st.session_state.page == "Recenzii":
                             st.success("Recenzia ta a fost publicată! Mulțumim 💛")
                             st.rerun()
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  ▌ BLOG
+# ══════════════════════════════════════════════════════════════════════════════
 elif st.session_state.page == "Blog":
     sp(2)
     st.markdown('<span class="eyebrow">Sfaturi & inspirație</span>', unsafe_allow_html=True)
@@ -1502,7 +1526,7 @@ După absolvirea cursurilor NailPro Academy primești o diplomã recunoscutã, p
 
     rule()
 
-
+    # ── Newsletter / notificări ───────────────────────────────────────────────
     st.markdown('<span class="eyebrow">Rămâi la curent</span>', unsafe_allow_html=True)
     sp()
     st.markdown('<div class="sec-title" style="text-align:center;">Abonează-te la <em>newsletter</em></div>', unsafe_allow_html=True)
@@ -1520,10 +1544,12 @@ După absolvirea cursurilor NailPro Academy primești o diplomã recunoscutã, p
                 else:
                     st.error("Introdu o adresă de email validă.")
 
-
+# ══════════════════════════════════════════════════════════════════════════════
+#  FOOTER
+# ══════════════════════════════════════════════════════════════════════════════
 sp(3)
 
-
+# ── Chestionar satisfacție ───────────────────────────────────────────────────
 if "sat_done" not in st.session_state:
     st.session_state.sat_done = False
 
