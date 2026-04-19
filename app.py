@@ -285,8 +285,11 @@ for k, v in {
         st.session_state[k] = v
 
 
-BASE1 = r"C:\Users\Melisa\Desktop\Pagina web\Nivel 1"
-BASE2 = r"C:\Users\Melisa\Desktop\Pagina web\Nivel 2"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+BASE1 = os.path.join(BASE_DIR, "Nivel 1")
+BASE2 = os.path.join(BASE_DIR, "Nivel 2")
+
 N1 = [os.path.join(BASE1, f"{i}.jpeg") for i in range(1, 11)]
 N2 = [os.path.join(BASE2, f"{i}.jpeg") for i in range(29, 20, -1)]
 
